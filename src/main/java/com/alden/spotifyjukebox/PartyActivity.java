@@ -1,10 +1,14 @@
 package com.alden.spotifyjukebox;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +19,8 @@ import android.widget.TextView;
 
 import com.alden.spotifyjukebox.component.Song;
 import com.alden.spotifyjukebox.component.SongItem;
+import com.alden.spotifyjukebox.net.TogglePlayRequest;
+import com.alden.spotifyjukebox.net.ChooseDevicRequest;
 import com.alden.spotifyjukebox.net.UpdateRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,6 +36,8 @@ public class PartyActivity extends AppCompatActivity {
     private String userHash = null;
 
     private Button btnAddSongs = null;
+    private Button btnTogglePlay = null;
+    private Button btnChooseDevice = null;
     private ListView lsParty = null;
 
     private ArrayList<Song> lastFetchedSongs = null;
@@ -40,6 +48,8 @@ public class PartyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_party);
 
         btnAddSongs = (Button)findViewById(R.id.btnAddSongs);
+        btnTogglePlay = (Button)findViewById(R.id.btnTogglePlay);
+        btnChooseDevice = (Button)findViewById(R.id.btnChooseDevice);
         lsParty = (ListView)findViewById(R.id.lstParty);
 
         if(savedInstanceState == null) {
@@ -67,6 +77,78 @@ public class PartyActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        final Activity _act = this;
+        btnTogglePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TogglePlayRequest toggle = new TogglePlayRequest(_act, userHash);
+                toggle.Perform(
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                ProcessToggleResponse(response);
+                            }
+                        },
+
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("Toggle", error.getMessage().toString());
+                            }
+                        });
+            }
+        });
+
+        btnChooseDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseDevicRequest chooseDev = new ChooseDevicRequest(_act, userHash, "GetDevices");
+                chooseDev.Perform(
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                ProcessChooseDeviceResponse(response);
+                            }
+                        },
+
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("chooseDev", error.getMessage().toString());
+                            }
+                        });
+            }
+        });
+    }
+
+    private void ProcessChooseDeviceResponse(String response) {
+        Log.d("chooseDev", response);
+        //TODO: Finish Implementing Device Choice
+        String devicesArray[] = { "Phone", "Chrome", "Safari" };
+        ChooseDevicesPopup(devicesArray).show();
+    }
+
+    private Dialog ChooseDevicesPopup(String[] devicesArray) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(PartyActivity.this);
+
+        builder.setTitle("Choose a device")
+                .setItems(devicesArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+
+        return builder.create();
+    }
+
+    private void ProcessToggleResponse(String response) {
+        if (response == "NoDeviceSelected")
+        {
+            //Display Modal With Device Options
+        }
     }
 
     @Override
