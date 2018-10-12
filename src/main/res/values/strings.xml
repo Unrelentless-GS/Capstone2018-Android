@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">SpotifyJukebox</string>
     <string name="juke_scopes">user-modify-playback-state user-read-playback-state playlist-read-private user-library-read user-read-email user-read-private user-read-birthdate</string>
+    <string name="title_activity_party_navdrawer">party_navdrawer</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

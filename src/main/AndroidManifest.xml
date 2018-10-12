@@ -20,10 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PartyActivity" />
+        <activity android:name=".PartyActivity" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".HostActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".JoinActivity" />
     </application>
 
 </manifest>

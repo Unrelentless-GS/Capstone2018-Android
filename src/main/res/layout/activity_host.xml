@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".HostActivity">
+    tools:context=".HostActivity"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:id="@+id/frmPartyInfo"
@@ -18,16 +19,25 @@
             android:id="@+id/txtNickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="50dp"
             android:ems="10"
+            android:gravity="center_horizontal"
             android:inputType="textPersonName"
-            android:text="Nickname" />
+            android:text="Nickname"
+            android:textColor="#ffffff"/>
 
         <Button
             android:id="@+id/btnCreate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Party" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:text="Create Party"
+            android:background="@layout/corner"
+            android:textColor="#ffffff"/>
     </LinearLayout>
 
     <LinearLayout
@@ -49,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Authorising..."
+            android:textColor="#ffffff"
             android:textAlignment="center"
             android:textSize="24sp" />
 
