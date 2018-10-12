@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
 import android.os.Parcelable;
+import android.provider.Telephony;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -103,51 +104,125 @@ public class PartyActivity extends AppCompatActivity {
         btnChooseDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChooseDevicRequest chooseDev = new ChooseDevicRequest(_act, userHash, "GetDevices");
-                chooseDev.Perform(
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                ProcessChooseDeviceResponse(response);
-                            }
-                        },
-
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("chooseDev", error.getMessage().toString());
-                            }
-                        });
+                ChooseDeviceButtonHandler("");
             }
         });
     }
 
-    private void ProcessChooseDeviceResponse(String response) {
-        Log.d("chooseDev", response);
-        //TODO: Finish Implementing Device Choice
-        String devicesArray[] = { "Phone", "Chrome", "Safari" };
-        ChooseDevicesPopup(devicesArray).show();
+    private void ChooseDeviceButtonHandler(final String cause){
+        ChooseDevicRequest chooseDev = new ChooseDevicRequest(PartyActivity.this, userHash, "GetDevices", "");
+        chooseDev.Perform(
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ProcessChooseDeviceResponse(response, cause);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("chooseDev", error.getMessage().toString());
+                    }
+                });
     }
 
-    private Dialog ChooseDevicesPopup(String[] devicesArray) {
+    private void ProcessChooseDeviceResponse(String response, String cause) {
+        try {
+
+            JSONObject object = new JSONObject(response);
+            JSONArray devices = object.getJSONArray("devices");
+            Log.d("chooseDev", devices.toString());
+
+            ChooseDevicesPopup(devices, cause).show();
+        }catch(JSONException je) {
+            je.printStackTrace();
+        }
+
+    }
+
+    private Dialog ChooseDevicesPopup(final JSONArray devices, final String cause) {
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PartyActivity.this);
 
-        builder.setTitle("Choose a device")
-                .setItems(devicesArray, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                    }
-                });
+        try {
+            String[] devicesNamesArray = new String[devices.length()];
+
+            for (int i=0; i < devices.length(); i++) {
+                JSONObject devOjb = devices.getJSONObject(i);
+                String devName = devOjb.getString("name");
+                if (devOjb.getBoolean("is_active"))
+                {
+                    devicesNamesArray[i] = devName + " (Current)";
+                }
+                else
+                {
+                    devicesNamesArray[i] = devName;
+                }
+
+            }
+
+            builder.setTitle("Choose a device")
+                    .setItems(devicesNamesArray, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                JSONObject devOjb = devices.getJSONObject(which);
+                                String deviceID = devOjb.getString("id");
+
+                                Activity _act = PartyActivity.this;
+
+                                ChooseDevicRequest chooseDev = new ChooseDevicRequest(_act, userHash, "PlayOnDevice", deviceID);
+                                chooseDev.Perform(
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                if (cause == "TP")
+                                                {
+                                                    TogglePlayRequest toggle = new TogglePlayRequest(PartyActivity.this, userHash);
+                                                    toggle.Perform(
+                                                            new Response.Listener<String>() {
+                                                                @Override
+                                                                public void onResponse(String response) {
+
+                                                                }
+                                                            },
+
+                                                            new Response.ErrorListener() {
+                                                                @Override
+                                                                public void onErrorResponse(VolleyError error) {
+                                                                    Log.d("Toggle", error.getMessage().toString());
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        },
+
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("chooseDev", error.getMessage().toString());
+                                            }
+                                        });
+                            }catch(JSONException je) {
+                                je.printStackTrace();
+                            }
+                        }
+                    });
+
+        }catch(JSONException je) {
+            je.printStackTrace();
+        }
 
         return builder.create();
     }
 
     private void ProcessToggleResponse(String response) {
-        if (response == "NoDeviceSelected")
+        Log.d("Toggle", response);
+        if (response.equals("NoDeviceSelected"))
         {
             //Display Modal With Device Options
+            ChooseDeviceButtonHandler("TP");
         }
     }
 
