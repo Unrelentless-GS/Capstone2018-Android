@@ -6,12 +6,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/choose_device"
-            android:icon="@android:drawable/ic_menu_add"
             android:title="Choose Device" />
         <item
             android:id="@+id/disband_party"
             android:icon="@android:drawable/ic_delete"
-            android:title="Disband Party" />
+            android:title="Disband Party"/>
+        <item
+            android:id="@+id/leave_party"
+            android:icon="@android:drawable/ic_delete"
+            android:title="Leave Party"
+            android:visible="false"/>
     </group>
 
 </menu>

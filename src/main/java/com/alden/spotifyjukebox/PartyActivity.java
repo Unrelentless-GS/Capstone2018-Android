@@ -45,6 +45,19 @@ public class PartyActivity extends AppCompatActivity
     private Button btnTogglePlay = null;
     private ListView lsParty = null;
 
+    private boolean isHost = false;
+
+    //if (isHost == false)
+    //{
+    //    MenuItem chooseDevice = (MenuItem) findViewById(R.id.choose_device);
+    //    MenuItem disbandParty = (MenuItem) findViewById(R.id.disband_party);
+    //    MenuItem leaveParty = (MenuItem) findViewById(R.id.leave_party);
+
+    //    chooseDevice.setVisible(false);
+    //    disbandParty.setVisible(false);
+    //    leaveParty.setVisible(true);
+    //}
+
     private ArrayList<Song> lastFetchedSongs = null;
 
     @Override
@@ -136,7 +149,38 @@ public class PartyActivity extends AppCompatActivity
             ChooseDeviceButtonHandler("");
         }
         else if (id == R.id.disband_party) {
+            UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "EndParty");
+            updateReq.Perform(
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //TODO:Redirect to MainScreen
+                        }
+                    },
 
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("updateReq", error.getMessage().toString());
+                        }
+                    });
+        }
+        else if (id == R.id.leave_party) {
+            UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "LeaveParty");
+            updateReq.Perform(
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //TODO:Redirect to MainScreen
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("updateReq", error.getMessage().toString());
+                        }
+                    });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,7 +221,6 @@ public class PartyActivity extends AppCompatActivity
     }
 
     private Dialog ChooseDevicesPopup(final JSONArray devices, final String cause) {
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PartyActivity.this);
 
