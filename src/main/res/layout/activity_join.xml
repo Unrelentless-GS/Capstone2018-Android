@@ -8,43 +8,79 @@
     tools:context=".JoinActivity"
     android:background="@color/colorPrimary">
 
-    <LinearLayout
-        android:id="@+id/frmParty"
+    <EditText
+        android:id="@+id/txtJoin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Party code"
+        android:inputType="textPersonName"
+        android:textColor="#ffffff"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:visibility="visible">
+        android:paddingRight="5dp">
 
-        <EditText
-            android:id="@+id/txtJoin"
+        <LinearLayout
+            android:id="@+id/frmLoading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Party code"
-            android:inputType="textPersonName"
-            android:textColor="#ffffff" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/txtNickname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ems="10"
-            android:hint="Your nickname"
-            android:inputType="textPersonName"
-            android:textColor="#ffffff" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btnJoin"
+            <TextView
+                android:id="@+id/lblLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Searching for party ..."
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/frmParty"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@layout/corner"
-            android:text="Join Party"
-            android:textColor="#ffffff" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/lblPartyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Example Name"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/txtNickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Your nickname"
+                android:inputType="textPersonName"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/btnJoin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@layout/corner"
+                android:text="Join Party"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

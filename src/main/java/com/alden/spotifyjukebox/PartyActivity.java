@@ -37,8 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PartyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,8 +50,6 @@ public class PartyActivity extends AppCompatActivity
     private Button btnTogglePlay = null;
     private ListView lsParty = null;
     private TextView tvRoomCode = null;
-
-    private Timer updateTimer = null;
 
     private ArrayList<Song> lastFetchedSongs = null;
 
@@ -317,17 +313,12 @@ public class PartyActivity extends AppCompatActivity
     @Override
     public void onResume() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         DownloadPlaylist();
-        CreateTimer();
-
         super.onResume();
     }
 
     @Override
     public  void onPause() {
-        CloseTimer();
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         super.onPause();
     }
@@ -426,14 +417,12 @@ public class PartyActivity extends AppCompatActivity
             ActivateMenuItem(chooseDevice, true);
             ActivateMenuItem(disbandParty, true);
             ActivateMenuItem(leaveParty, false);
-
             playPause.setVisibility(View.VISIBLE);
             playPause.setEnabled(true);
         }else{
             ActivateMenuItem(chooseDevice, false);
             ActivateMenuItem(disbandParty, false);
             ActivateMenuItem(leaveParty, true);
-
             playPause.setVisibility(View.GONE);
             playPause.setEnabled(false);
         }
@@ -442,23 +431,6 @@ public class PartyActivity extends AppCompatActivity
     private void ActivateMenuItem(MenuItem v, boolean act) {
         v.setVisible(act);
         v.setEnabled(act);
-    }
-
-    private void CreateTimer() {
-        CloseTimer();
-
-        updateTimer = new Timer("UpdateTimer");
-        updateTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                DownloadPlaylist();
-            }
-        }, 1100);
-    }
-
-    private void CloseTimer() {
-        if(updateTimer != null)
-            updateTimer.cancel();
     }
 
     public static String FORMAT_NAME(String name) {

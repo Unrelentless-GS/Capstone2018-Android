@@ -70,18 +70,10 @@ public class SongItem extends ArrayAdapter<Song> {
     }
 
     public void Upvote(Song s) {
-        int v = 1;
-
-        if(s.yourVote == 1)
-            v = 0;
-        SendVote(s.id, v);
+        SendVote(s.id, 1);
     }
 
     public void Downvote(Song s) {
-        int v = -1;
-
-        if(s.yourVote == -1)
-            v = 0;
         SendVote(s.id, -1);
     }
 

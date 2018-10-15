@@ -27,8 +27,12 @@ public class JoinActivity extends AppCompatActivity {
     private LinearLayout frmLoading;
 
     private EditText txtPartyCode;
+    private TextView lblPartyName;
+    private TextView lblLoading;
     private EditText txtNickname;
     private Button btnJoin;
+
+    private boolean performingCheck = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +44,20 @@ public class JoinActivity extends AppCompatActivity {
         frmLoading = findViewById(R.id.frmLoading);
 
         txtPartyCode = findViewById(R.id.txtJoin);
+        lblLoading = findViewById(R.id.lblLoading);
+        lblPartyName = findViewById(R.id.lblPartyName);
         txtNickname = findViewById(R.id.txtNickname);
         btnJoin = findViewById(R.id.btnJoin);
+
+        SetLoadingVisible(true);
+        SetupTextListener(txtPartyCode);
 
         final Activity _act = this;
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: Nickname validation.
-                JoinRequest join = new JoinRequest(_act, txtNickname.getText().toString(), txtPartyCode.getText().toString(), false);
+                JoinRequest join = new JoinRequest(_act, txtNickname.getText().toString(), frmParty.getTag().toString(), false);
                 join.Perform(
                     new Response.Listener<String>() {
                         @Override
@@ -103,6 +112,104 @@ public class JoinActivity extends AppCompatActivity {
             finish();
         }catch(JSONException je) {
             je.printStackTrace();
+        }
+    }
+
+    private void SetupTextListener(final EditText txtPartyCode) {
+        final Activity _ctx = this;
+        txtPartyCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                new CountDownTimer(1100, 1000) {
+                    @Override
+                    public void onTick(long millsUntilFinished) {
+                        // Unused.
+                    }
+                    @Override
+                    public void onFinish() {
+                        _ctx.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                performingCheck = true;
+
+                                lblLoading.setText("Searching for party ...");
+
+                                if(performingCheck)
+                                    SetLoadingVisible(true);
+
+                                CheckForParty(txtPartyCode.getText().toString());
+                            }
+                        });
+                    }
+                }.start();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void CheckForParty(String code) {
+        final String _code = code;
+        final Activity _ctx = this;
+
+        JoinRequest join = new JoinRequest(this, "", code, true);
+        join.Perform(
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            final JSONObject juke_msg = object.getJSONObject("JUKE_MSG");
+
+                            if(juke_msg.has("JukeboxFault") && juke_msg.getString("JukeboxFault").equals("NoSuchParty")) {
+                                _ctx.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        lblLoading.setText("Party not found!");
+                                    }
+                                });
+                            }else if(juke_msg.has("Status") && juke_msg.getString("Status").equals("Success")) {
+                                final String hostName = juke_msg.getString("HostName");
+
+                                _ctx.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        frmParty.setTag(_code);
+                                        lblPartyName.setText(PartyActivity.FORMAT_NAME(hostName));
+                                        SetLoadingVisible(false);
+                                    }
+                                });
+                            }
+                            performingCheck = false;
+                        }catch(JSONException je) {
+                            je.printStackTrace();
+                            performingCheck = false;
+                        }
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("TEST_REQUEST", error.getMessage().toString());
+                        performingCheck = false;
+                    }
+                });
+    }
+
+    private void SetLoadingVisible(boolean visible) {
+        if(visible) {
+            frmLoading.setVisibility(View.VISIBLE);
+            frmParty.setVisibility(View.GONE);
+        }else{
+            frmLoading.setVisibility(View.GONE);
+            frmParty.setVisibility(View.VISIBLE);
         }
     }
 }
