@@ -82,7 +82,7 @@ public class SongItem extends ArrayAdapter<Song> {
 
         if(s.yourVote == -1)
             v = 0;
-        SendVote(s.id, -1);
+        SendVote(s.id, v);
     }
 
     private void SendVote(int songid, int value) {
