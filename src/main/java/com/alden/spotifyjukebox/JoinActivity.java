@@ -106,7 +106,7 @@ public class JoinActivity extends AppCompatActivity {
             // This isn't a security risk, as the webserver will also have its own authentication
             // ensuring a user isn't attempting disband party. An alternative is, of course, adding IsHost to the reply from the
             // webserver.
-            intent.putExtra("IsHost", true);
+            intent.putExtra("IsHost", false);
 
             startActivity(intent);
             finish();
