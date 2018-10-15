@@ -411,15 +411,20 @@ public class PartyActivity extends AppCompatActivity
         MenuItem chooseDevice = (MenuItem) view.findItem(R.id.choose_device);
         MenuItem disbandParty = (MenuItem) view.findItem(R.id.disband_party);
         MenuItem leaveParty = (MenuItem) view.findItem(R.id.leave_party);
+        Button playPause = findViewById(R.id.btnTogglePlay);
 
         if(isHost) {
             ActivateMenuItem(chooseDevice, true);
             ActivateMenuItem(disbandParty, true);
             ActivateMenuItem(leaveParty, false);
+            playPause.setVisibility(View.VISIBLE);
+            playPause.setEnabled(true);
         }else{
             ActivateMenuItem(chooseDevice, false);
             ActivateMenuItem(disbandParty, false);
             ActivateMenuItem(leaveParty, true);
+            playPause.setVisibility(View.GONE);
+            playPause.setEnabled(false);
         }
     }
 
