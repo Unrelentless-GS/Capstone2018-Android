@@ -78,7 +78,7 @@ public class NetRequest {
 
     public static String GetHost() {
         if(DEBUG) {
-            return "http://10.0.0.4/xampp/SpotifyJukebox/";
+            return "http://192.168.0.11/xampp/SpotifyJukebox/";
         }else{
             return "https://spotify-jukebox.viljoen.industries/";
         }

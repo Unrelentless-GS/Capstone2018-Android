@@ -32,6 +32,8 @@ public class JoinActivity extends AppCompatActivity {
     private EditText txtNickname;
     private Button btnJoin;
 
+    private boolean performingCheck = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,13 +95,21 @@ public class JoinActivity extends AppCompatActivity {
 
             String userHash = juke_msg.getString("UserHash");
             String partyName = juke_msg.getString("HostName");
+            String joinCode = juke_msg.getString("JoinCode");
 
             // Open PartyActivity, same as Host.
             Intent intent = new Intent(this, PartyActivity.class);
             intent.putExtra("UserHash", userHash);
             intent.putExtra("PartyName", partyName);
+            intent.putExtra("JoinCode", joinCode);
+
+            // This isn't a security risk, as the webserver will also have its own authentication
+            // ensuring a user isn't attempting disband party. An alternative is, of course, adding IsHost to the reply from the
+            // webserver.
+            intent.putExtra("IsHost", true);
 
             startActivity(intent);
+            finish();
         }catch(JSONException je) {
             je.printStackTrace();
         }
@@ -124,8 +134,12 @@ public class JoinActivity extends AppCompatActivity {
                         _ctx.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                performingCheck = true;
+
                                 lblLoading.setText("Searching for party ...");
-                                SetLoadingVisible(true);
+
+                                if(performingCheck)
+                                    SetLoadingVisible(true);
 
                                 CheckForParty(txtPartyCode.getText().toString());
                             }
@@ -172,8 +186,10 @@ public class JoinActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+                            performingCheck = false;
                         }catch(JSONException je) {
                             je.printStackTrace();
+                            performingCheck = false;
                         }
                     }
                 },
@@ -182,6 +198,7 @@ public class JoinActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("TEST_REQUEST", error.getMessage().toString());
+                        performingCheck = false;
                     }
                 });
     }

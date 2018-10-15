@@ -18,6 +18,7 @@ public class HostResponse extends NetMessage {
     };
 
     private String userHash;
+    private String joinCode;
 
     public HostResponse(String _raw) {
         super(_raw);
@@ -25,11 +26,17 @@ public class HostResponse extends NetMessage {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(userHash);
+        parcel.writeString(joinCode);
+
         super.writeToParcel(parcel, i);
     }
 
     protected HostResponse(Parcel in) {
         super(in);
+
+        userHash = in.readString();
+        joinCode = in.readString();
     }
 
     @Override
@@ -37,6 +44,7 @@ public class HostResponse extends NetMessage {
         if(IsValid()) {
             try {
                 userHash = GetObject().getString("UserHash");
+                joinCode = GetObject().getString("JoinCode");
             }catch (JSONException je) {
                 je.printStackTrace();
             }
@@ -45,5 +53,9 @@ public class HostResponse extends NetMessage {
 
     public String GetUserHash() {
         return userHash;
+    }
+
+    public String GetJoinCode(){
+        return joinCode;
     }
 }

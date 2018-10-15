@@ -132,7 +132,7 @@ public class HostActivity extends AppCompatActivity {
         }
 
         final Activity ctx = this;
-        HostRequest host = new HostRequest(this, authCode, txtNickname.getText().toString());
+        final HostRequest host = new HostRequest(this, authCode, txtNickname.getText().toString());
         host.Perform(
                 new Response.Listener<String>() {
                      @Override
@@ -147,8 +147,11 @@ public class HostActivity extends AppCompatActivity {
                         Intent intent = new Intent(ctx, PartyActivity.class);
                         intent.putExtra("UserHash", hostResponse.GetUserHash());
                         intent.putExtra("PartyName", txtNickname.getText().toString());
+                        intent.putExtra("JoinCode", hostResponse.GetJoinCode());
+                        intent.putExtra("IsHost", true);
 
                         startActivity(intent);
+                         ctx.finish();
                      }
                 },
 

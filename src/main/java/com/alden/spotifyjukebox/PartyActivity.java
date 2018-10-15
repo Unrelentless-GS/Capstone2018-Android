@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,11 +16,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.design.widget.NavigationView;
+import android.widget.TextView;
 
 import com.alden.spotifyjukebox.component.Song;
 import com.alden.spotifyjukebox.component.SongItem;
@@ -40,23 +43,13 @@ public class PartyActivity extends AppCompatActivity
 
     private String partyName = null;
     private String userHash = null;
+    private String joinCode = null;
+    private Boolean isHost = false;
 
     private Button btnAddSongs = null;
     private Button btnTogglePlay = null;
     private ListView lsParty = null;
-
-    private boolean isHost = false;
-
-    //if (isHost == false)
-    //{
-    //    MenuItem chooseDevice = (MenuItem) findViewById(R.id.choose_device);
-    //    MenuItem disbandParty = (MenuItem) findViewById(R.id.disband_party);
-    //    MenuItem leaveParty = (MenuItem) findViewById(R.id.leave_party);
-
-    //    chooseDevice.setVisible(false);
-    //    disbandParty.setVisible(false);
-    //    leaveParty.setVisible(true);
-    //}
+    private TextView tvRoomCode = null;
 
     private ArrayList<Song> lastFetchedSongs = null;
 
@@ -67,6 +60,7 @@ public class PartyActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,6 +71,9 @@ public class PartyActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+        tvRoomCode = header.findViewById(R.id.tvRoomCode);
+
         btnAddSongs = (Button)findViewById(R.id.btnAddSongs);
         btnTogglePlay = (Button)findViewById(R.id.btnTogglePlay);
         lsParty = (ListView)findViewById(R.id.lstParty);
@@ -85,12 +82,20 @@ public class PartyActivity extends AppCompatActivity
             // Setup.
             Intent intent = getIntent();
             userHash = intent.getStringExtra("UserHash");
+            joinCode = intent.getStringExtra("JoinCode");
+            isHost = intent.getBooleanExtra("IsHost", false);
 
             if(intent.hasExtra("PartyName"))
                 partyName = intent.getStringExtra("PartyName");
         }else{
             onRestoreInstanceState(savedInstanceState);
         }
+
+        // Implementing host/guest options.
+        ConfigureAuthorisation(navigationView.getMenu());
+
+        if(tvRoomCode != null && joinCode != null)
+            tvRoomCode.setText("join: " + joinCode);
 
         if(partyName != null)
             setTitle(FORMAT_NAME(partyName));
@@ -142,6 +147,7 @@ public class PartyActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item) {
+        final Activity _act = this;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -154,7 +160,7 @@ public class PartyActivity extends AppCompatActivity
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            //TODO:Redirect to MainScreen
+                            _act.finish();
                         }
                     },
 
@@ -171,7 +177,7 @@ public class PartyActivity extends AppCompatActivity
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            //TODO:Redirect to MainScreen
+                            _act.finish();
                         }
                     },
 
@@ -320,14 +326,19 @@ public class PartyActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString("UserHash", userHash);
-        savedInstanceState.putParcelableArrayList("LastFetchedSongs", (lastFetchedSongs == null) ? new ArrayList<Song>() : lastFetchedSongs);
+        savedInstanceState.putString("JoinCode", joinCode);
+        savedInstanceState.putBoolean("IsHost", isHost);
 
+        savedInstanceState.putParcelableArrayList("LastFetchedSongs", (lastFetchedSongs == null) ? new ArrayList<Song>() : lastFetchedSongs);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         userHash = savedInstanceState.getString("UserHash");
+        joinCode = savedInstanceState.getString("JoinCode");
+        isHost = savedInstanceState.getBoolean("IsHost");
+
         lastFetchedSongs = savedInstanceState.getParcelableArrayList("LastFetchedSongs");
     }
 
@@ -394,6 +405,27 @@ public class PartyActivity extends AppCompatActivity
             }
         });
         lsParty.setAdapter(adapter);
+    }
+
+    private void ConfigureAuthorisation(Menu view) {
+        MenuItem chooseDevice = (MenuItem) view.findItem(R.id.choose_device);
+        MenuItem disbandParty = (MenuItem) view.findItem(R.id.disband_party);
+        MenuItem leaveParty = (MenuItem) view.findItem(R.id.leave_party);
+
+        if(isHost) {
+            ActivateMenuItem(chooseDevice, true);
+            ActivateMenuItem(disbandParty, true);
+            ActivateMenuItem(leaveParty, false);
+        }else{
+            ActivateMenuItem(chooseDevice, false);
+            ActivateMenuItem(disbandParty, false);
+            ActivateMenuItem(leaveParty, true);
+        }
+    }
+
+    private void ActivateMenuItem(MenuItem v, boolean act) {
+        v.setVisible(act);
+        v.setEnabled(act);
     }
 
     public static String FORMAT_NAME(String name) {
