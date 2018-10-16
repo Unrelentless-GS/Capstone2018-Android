@@ -6,16 +6,17 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/choose_device"
+            android:icon="@drawable/ic_baseline_phone_android"
             android:title="Choose Device" />
         <item
             android:id="@+id/disband_party"
-            android:icon="@android:drawable/ic_delete"
-            android:title="Disband Party"/>
+            android:icon="@drawable/ic_baseline_exit_to_app"
+            android:title="Disband Party" />
         <item
             android:id="@+id/leave_party"
-            android:icon="@android:drawable/ic_delete"
+            android:icon="@drawable/ic_baseline_exit_to_app"
             android:title="Leave Party"
-            android:visible="false"/>
+            android:visible="false" />
     </group>
 
 </menu>

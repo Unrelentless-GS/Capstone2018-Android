@@ -25,8 +25,9 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="textPersonName"
-            android:text="Nickname"
-            android:textColor="#ffffff"/>
+            android:hint="Nickname"
+            android:textColor="#ffffff"
+            android:textColorHint="#888" />
 
         <Button
             android:id="@+id/btnCreate"

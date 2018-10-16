@@ -22,7 +22,6 @@
         </activity>
         <activity android:name=".PartyActivity" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".HostActivity" />
-        <activity android:name=".SearchActivity" />
         <activity android:name=".JoinActivity" />
     </application>
 

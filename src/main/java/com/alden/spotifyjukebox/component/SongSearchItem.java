@@ -1,13 +1,17 @@
 package com.alden.spotifyjukebox.component;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alden.spotifyjukebox.R;
@@ -18,6 +22,12 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 public class SongSearchItem extends ArrayAdapter<Song> {
@@ -42,21 +52,21 @@ public class SongSearchItem extends ArrayAdapter<Song> {
             result = inflater.inflate(R.layout.adapter_search_song, null);
         }
 
-        Button btnAdd = result.findViewById(R.id.btnAdd);
+        LinearLayout btnAdd = result.findViewById(R.id.layoutBtnAdd);
         TextView tvAdded = result.findViewById(R.id.lblAdded);
         TextView songName = result.findViewById(R.id.lblSongName);
         TextView songArtistAlbum = result.findViewById(R.id.lblArtistAlbum);
+        ImageView songImage = result.findViewById(R.id.songImage);
 
         final Song s = getItem(position);
         songName.setText(s.name);
         songArtistAlbum.setText(s.artist + " • " + s.album);
+        //songImage.setImageDrawable(ImageOperations(s.imageLink));
 
         if(SongAdded(s)) {
             tvAdded.setVisibility(View.VISIBLE);
-            btnAdd.setVisibility(View.GONE);
         }else{
             tvAdded.setVisibility(View.GONE);
-            btnAdd.setVisibility(View.VISIBLE);
 
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,6 +77,22 @@ public class SongSearchItem extends ArrayAdapter<Song> {
         }
 
         return result;
+    }
+
+    private Drawable ImageOperations(String url) {
+        try {
+            InputStream is = (InputStream) this.fetch(url);
+            Drawable d = Drawable.createFromStream(is, "src");
+            return d;
+        }  catch (IOException e) {
+            Log.d("ImageOps", "Error");
+            return null;
+        }
+    }
+
+    public Object fetch(String address) throws IOException {
+        URL url = new URL(address);
+        return url.getContent();
     }
 
     private void AddSong(Song s) {
