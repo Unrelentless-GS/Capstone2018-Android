@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alden.spotifyjukebox.R;
@@ -47,6 +48,9 @@ public class SongItem extends ArrayAdapter<Song> {
         TextView tvUpvote = result.findViewById(R.id.lblUpvote);
         TextView tvDownvote = result.findViewById(R.id.lblDownvote);
 
+        LinearLayout frmVoting = result.findViewById(R.id.frmVoting);
+        SetVotingEnabled(frmVoting, song);
+
         songName.setText(song.name);
         songArtistAlbum.setText(song.artist + " • " + song.album);
 
@@ -56,14 +60,12 @@ public class SongItem extends ArrayAdapter<Song> {
                 Upvote(song);
             }
         });
-
         tvDownvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Downvote(song);
             }
         });
-
         voteCount.setText(String.valueOf(song.voteCount));
 
         return result;
@@ -112,5 +114,15 @@ public class SongItem extends ArrayAdapter<Song> {
                     }
                 }
         );
+    }
+
+    private void SetVotingEnabled(LinearLayout voting, Song song) {
+        if(song.isPlaying) {
+            voting.setEnabled(false);
+            voting.setVisibility(View.GONE);
+        }else{
+            voting.setEnabled(true);
+            voting.setVisibility(View.VISIBLE);
+        }
     }
 }

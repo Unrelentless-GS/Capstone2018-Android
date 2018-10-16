@@ -59,6 +59,9 @@ public class PartyActivity extends AppCompatActivity
     private ImageButton btnTogglePlay = null;
     private ListView lsParty = null;
     private TextView tvRoomCode = null;
+    private TextView tvCurrentSong = null;
+    private TextView tvCurrentAlbum = null;
+
 
     private Timer updateTimer = null;
 
@@ -91,6 +94,8 @@ public class PartyActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         tvRoomCode = header.findViewById(R.id.tvRoomCode);
+        tvCurrentSong = findViewById(R.id.tvCurrentSong);
+        tvCurrentAlbum = findViewById(R.id.tvCurrentAlbum);
 
         btnTogglePlay = (ImageButton) findViewById(R.id.btnTogglePlay);
         lsParty = (ListView)findViewById(R.id.lstParty);
@@ -444,6 +449,8 @@ public class PartyActivity extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         DownloadPlaylist();
+        DownloadPlayback();
+
         CreateTimer();
 
         super.onResume();
@@ -500,6 +507,26 @@ public class PartyActivity extends AppCompatActivity
             });
     }
 
+    private void DownloadPlayback() {
+        final Context ctx = this;
+
+        UpdateRequest update = new UpdateRequest(ctx, userHash, "CurrentlyPlaying");
+        update.Perform(
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ProcessPlayback(response);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+    }
+
     private void PopulateListView(String raw) {
         if(raw.equals("")) {
             Log.d("PopulateListView", "Response is nil");
@@ -545,6 +572,33 @@ public class PartyActivity extends AppCompatActivity
         lsParty.setAdapter(adapter);
     }
 
+    private void ProcessPlayback(String response) {
+        try {
+            JSONObject json = new JSONObject(response);
+            JSONObject juke_msg = new JSONObject(json.getString("JUKE_MSG"));
+
+            if(!juke_msg.getBoolean("is_playing")) {
+                tvCurrentSong.setText("Nothing playing!");
+                tvCurrentAlbum.setText("");
+                return;
+            }
+
+            JSONObject item = juke_msg.getJSONObject("item");
+            Song s = new Song(item, true);
+
+            if(!s.IsValid()) {
+                tvCurrentSong.setText("Updating ...");
+                tvCurrentAlbum.setText("");
+                return;
+            }
+
+            tvCurrentSong.setText(s.name);
+            tvCurrentAlbum.setText(s.artist + " • " + s.album);
+        }catch(JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
     private void ConfigureAuthorisation(Menu view) {
         MenuItem chooseDevice = (MenuItem) view.findItem(R.id.choose_device);
         MenuItem disbandParty = (MenuItem) view.findItem(R.id.disband_party);
@@ -580,6 +634,7 @@ public class PartyActivity extends AppCompatActivity
             @Override
             public void run() {
                 DownloadPlaylist();
+                DownloadPlayback();
             }
         }, 1100);
     }

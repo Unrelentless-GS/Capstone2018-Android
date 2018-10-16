@@ -31,6 +31,8 @@ public class Song implements Parcelable {
     public int voteCount;
     public int yourVote;
 
+    public boolean isPlaying = false;
+
     // Received from Spotify. Used in search results.
     public Song(JSONObject object, boolean useThisIfFromSpotify) {
         try {
@@ -62,6 +64,7 @@ public class Song implements Parcelable {
             this.imageLink = object.getString("SongImageLink");
             this.voteCount = object.getInt("VoteCount");
             this.yourVote = object.getInt("YourVote");
+            this.isPlaying = (object.getInt("IsPlaying") == 1 ? true : false);
 
             isValid = true;
         }catch(JSONException je) {
@@ -78,6 +81,7 @@ public class Song implements Parcelable {
         this.imageLink = in.readString();
         this.voteCount = in.readInt();
         this.yourVote = in.readInt();
+        this.isPlaying = (in.readByte() == 1) ? true : false;
     }
 
     @Override
@@ -90,6 +94,7 @@ public class Song implements Parcelable {
         dest.writeString(imageLink);
         dest.writeInt(voteCount);
         dest.writeInt(yourVote);
+        dest.writeByte((byte)((isPlaying) ? 1 : 0));
     }
 
     public boolean IsValid() {
