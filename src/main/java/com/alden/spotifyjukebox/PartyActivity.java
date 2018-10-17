@@ -636,7 +636,7 @@ public class PartyActivity extends AppCompatActivity
                 DownloadPlaylist();
                 DownloadPlayback();
             }
-        }, 1100);
+        }, 0, 1100);
     }
 
     private void CloseTimer() {
