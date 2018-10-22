@@ -192,7 +192,7 @@ public class PartyActivity extends AppCompatActivity
             }
 
             recentSearchResults = results;
-            SongSearchItem adapter = new SongSearchItem(this,this, results, currentSongs, userHash);
+            SongSearchItem adapter = new SongSearchItem(this, results, currentSongs, userHash);
 
             lsResults.setAdapter(adapter);
         }catch(JSONException je) {

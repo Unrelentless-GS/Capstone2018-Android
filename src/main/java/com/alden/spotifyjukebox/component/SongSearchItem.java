@@ -28,13 +28,13 @@ public class SongSearchItem extends ArrayAdapter<Song> {
     private List<Song> results;
     private List<Song> currentSongs;
 
-    public SongSearchItem(@NonNull PartyActivity partyActivity, @NonNull Context context, @NonNull List<Song> results, List<Song> current, String hash) {
+    public SongSearchItem(@NonNull Context context, @NonNull List<Song> results, List<Song> current, String hash) {
         super(context, R.layout.adapter_search_song, results);
 
         this.userHash = hash;
         this.results = results;
+        this.partyActivity = (PartyActivity)getContext();
         this.currentSongs = current;
-        this.partyActivity = partyActivity;
     }
 
     @Override
