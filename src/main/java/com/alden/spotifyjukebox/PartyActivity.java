@@ -23,9 +23,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.support.design.widget.NavigationView;
 import android.widget.TextView;
@@ -39,6 +39,7 @@ import com.alden.spotifyjukebox.net.ChooseDevicRequest;
 import com.alden.spotifyjukebox.net.UpdateRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +62,7 @@ public class PartyActivity extends AppCompatActivity
     private TextView tvRoomCode = null;
     private TextView tvCurrentSong = null;
     private TextView tvCurrentAlbum = null;
+    private ImageView tvCurrentImage = null;
 
 
     private Timer updateTimer = null;
@@ -96,6 +98,7 @@ public class PartyActivity extends AppCompatActivity
         tvRoomCode = header.findViewById(R.id.tvRoomCode);
         tvCurrentSong = findViewById(R.id.tvCurrentSong);
         tvCurrentAlbum = findViewById(R.id.tvCurrentAlbum);
+        tvCurrentImage = findViewById(R.id.tvCurrentImage);
 
         btnTogglePlay = (ImageButton) findViewById(R.id.btnTogglePlay);
         lsParty = (ListView)findViewById(R.id.lstParty);
@@ -189,7 +192,7 @@ public class PartyActivity extends AppCompatActivity
             }
 
             recentSearchResults = results;
-            SongSearchItem adapter = new SongSearchItem(this, results, currentSongs, userHash);
+            SongSearchItem adapter = new SongSearchItem(this,this, results, currentSongs, userHash);
 
             lsResults.setAdapter(adapter);
         }catch(JSONException je) {
@@ -262,16 +265,20 @@ public class PartyActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (isSearchOpen) {
-            isSearchOpen = false;
-            View searchLinearLayer = findViewById(R.id.search);
-            searchLinearLayer.setVisibility(View.GONE);
-
-            EditText txtSearchTerm = findViewById(R.id.txtSearchTerm);
-            txtSearchTerm.setText("");
-            txtSearchTerm.clearFocus();
+            CloseSearch();
         }else {
             super.onBackPressed();
         }
+    }
+
+    public void CloseSearch(){
+        isSearchOpen = false;
+        View searchLinearLayer = findViewById(R.id.search);
+        searchLinearLayer.setVisibility(View.GONE);
+
+        EditText txtSearchTerm = findViewById(R.id.txtSearchTerm);
+        txtSearchTerm.setText("");
+        txtSearchTerm.clearFocus();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -594,6 +601,8 @@ public class PartyActivity extends AppCompatActivity
 
             tvCurrentSong.setText(s.name);
             tvCurrentAlbum.setText(s.artist + " • " + s.album);
+            Picasso.get().load(s.imageLink).resize(50, 50).into(tvCurrentImage);
+
         }catch(JSONException je) {
             je.printStackTrace();
         }
