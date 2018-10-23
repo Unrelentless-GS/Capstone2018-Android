@@ -3,17 +3,14 @@ package com.alden.spotifyjukebox;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.CountDownTimer;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.alden.spotifyjukebox.net.JoinRequest;
 import com.android.volley.Response;
@@ -34,7 +31,7 @@ public class JoinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
-        setTitle("Join in");
+        setTitle("Join Party");
 
         frmParty = findViewById(R.id.frmParty);
         frmLoading = findViewById(R.id.frmLoading);
@@ -81,8 +78,21 @@ public class JoinActivity extends AppCompatActivity {
 
     private void ProcessJoinResponse(String response) {
         try {
+            Log.d("Join", response);
+
             JSONObject object = new JSONObject(response);
             JSONObject juke_msg = object.getJSONObject("JUKE_MSG");
+
+            try{
+                String jukeboxFault = juke_msg.getString("JukeboxFault");
+                if (jukeboxFault.equals("NoSuchParty"))
+                {
+                    String string = "Incorrect Party ID";
+                    Snackbar.make(findViewById(R.id.frmParty), string, Snackbar.LENGTH_LONG).show();
+                }
+            }catch (Exception e){
+
+            }
 
             String userHash = juke_msg.getString("UserHash");
             String partyName = juke_msg.getString("HostName");

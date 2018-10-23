@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.support.design.widget.NavigationView;
@@ -57,13 +56,12 @@ public class PartyActivity extends AppCompatActivity
     private String joinCode = null;
     private Boolean isHost = false;
 
-    private ImageButton btnTogglePlay = null;
+    private ImageView btnTogglePlay = null;
     private ListView lsParty = null;
     private TextView tvRoomCode = null;
     private TextView tvCurrentSong = null;
     private TextView tvCurrentAlbum = null;
     private ImageView tvCurrentImage = null;
-
 
     private Timer updateTimer = null;
 
@@ -100,7 +98,7 @@ public class PartyActivity extends AppCompatActivity
         tvCurrentAlbum = findViewById(R.id.tvCurrentAlbum);
         tvCurrentImage = findViewById(R.id.tvCurrentImage);
 
-        btnTogglePlay = (ImageButton) findViewById(R.id.btnTogglePlay);
+        btnTogglePlay = (ImageView) findViewById(R.id.btnTogglePlay);
         lsParty = (ListView)findViewById(R.id.lstParty);
 
         if(savedInstanceState == null) {
@@ -361,7 +359,8 @@ public class PartyActivity extends AppCompatActivity
             }
             else
             {
-                ChooseDevicesPopup(devices, cause).show();
+                Dialog dialog = ChooseDevicesPopup(devices, cause);
+                dialog.show();
             }
         }catch(JSONException je) {
             je.printStackTrace();
@@ -370,7 +369,7 @@ public class PartyActivity extends AppCompatActivity
 
     private Dialog ChooseDevicesPopup(final JSONArray devices, final String cause) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(PartyActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PartyActivity.this, R.style.AlertDialog);
 
         try {
             String[] devicesNamesArray = new String[devices.length()];

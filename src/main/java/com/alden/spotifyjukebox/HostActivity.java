@@ -41,7 +41,7 @@ public class HostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
-        setTitle("Let's start partying");
+        setTitle("Host Party");
 
         this.frmLoading = (LinearLayout)findViewById(R.id.frmLoading);
         this.frmParty = (LinearLayout)findViewById(R.id.frmPartyInfo);

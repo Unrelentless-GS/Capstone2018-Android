@@ -1,12 +1,14 @@
 package com.alden.spotifyjukebox.component;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.alden.spotifyjukebox.R;
 import com.alden.spotifyjukebox.net.VoteRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,15 +47,21 @@ public class SongItem extends ArrayAdapter<Song> {
         TextView songName = result.findViewById(R.id.lblSongName);
         TextView songArtistAlbum = result.findViewById(R.id.lblArtistAlbum);
         TextView voteCount = result.findViewById(R.id.lblVoteCount);
+        ImageView songImage = result.findViewById(R.id.ivSongImage);
 
         TextView tvUpvote = result.findViewById(R.id.lblUpvote);
         TextView tvDownvote = result.findViewById(R.id.lblDownvote);
 
+        //For currently Playing
         LinearLayout frmVoting = result.findViewById(R.id.frmVoting);
         SetVotingEnabled(frmVoting, song);
+        if(song.isPlaying) {
+            result.setBackgroundColor(Color.parseColor("#8a550a"));
+        }
 
         songName.setText(song.name);
         songArtistAlbum.setText(song.artist + " • " + song.album);
+        Picasso.get().load(song.imageLink).resize(50, 50).into(songImage);
 
         tvUpvote.setOnClickListener(new View.OnClickListener() {
             @Override

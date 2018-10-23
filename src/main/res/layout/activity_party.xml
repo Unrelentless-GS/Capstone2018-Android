@@ -4,23 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
     tools:context=".PartyActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="?attr/actionBarSize" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:orientation="vertical">
+        android:background="@color/searchBar"
+        android:orientation="vertical"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp">
 
         <EditText
             android:id="@+id/txtSearchTerm"
@@ -39,12 +39,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:visibility="gone">
 
         <ListView
             android:id="@+id/lstResults"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:dividerHeight="5dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -57,15 +60,19 @@
             android:id="@+id/lstParty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7">
+            android:layout_weight="7"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:dividerHeight="5dp">
         </ListView>
 
         <LinearLayout
+            android:id="@+id/CurrentlyPlayingLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal"
-            android:paddingRight="6dp"
-            android:paddingBottom="6dp">
+            android:paddingRight="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +100,9 @@
                         android:layout_weight="0"
                         android:textColor="#ffffff"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:id="@+id/tvCurrentAlbum"
@@ -101,20 +110,22 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:textColor="#c8c8c8"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
             </LinearLayout>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btnTogglePlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center"
                 android:layout_marginTop="2dp"
-                android:background="@layout/corner"
+                android:clickable="true"
                 android:padding="6dp"
-                app:srcCompat="@android:drawable/ic_media_play" />
+                app:srcCompat="@drawable/ic_play_button_orange" />
 
         </LinearLayout>
 

@@ -8,22 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.alden.spotifyjukebox.msg.HostResponse;
-import com.alden.spotifyjukebox.net.HostRequest;
-import com.alden.spotifyjukebox.net.JoinRequest;
 import com.alden.spotifyjukebox.net.UpdateRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Error;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnLogin = null;
