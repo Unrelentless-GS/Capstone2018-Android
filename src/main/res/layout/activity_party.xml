@@ -29,8 +29,8 @@
             android:layout_marginTop="6dp"
             android:hint="Search..."
             android:inputType="textPersonName"
-            android:textColor="#ffffff"
-            android:textColorHint="#888" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/textPlaceHolder" />
 
     </LinearLayout>
 
@@ -98,21 +98,21 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginBottom="2dp"
                         android:layout_weight="0"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvCurrentAlbum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:textColor="#c8c8c8"
-                        android:textSize="16sp"
                         android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:textColor="@color/textArtist"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>

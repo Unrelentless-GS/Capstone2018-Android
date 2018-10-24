@@ -24,10 +24,10 @@
             android:layout_marginRight="50dp"
             android:ems="10"
             android:gravity="center_horizontal"
-            android:inputType="textPersonName"
             android:hint="Nickname"
-            android:textColor="#ffffff"
-            android:textColorHint="#888" />
+            android:inputType="textPersonName"
+            android:textColor="@color/text"
+            android:textColorHint="@color/textPlaceHolder" />
 
         <Button
             android:id="@+id/btnCreate"
@@ -36,9 +36,9 @@
             android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="50dp"
-            android:text="Create Party"
             android:background="@layout/corner"
-            android:textColor="#ffffff"/>
+            android:text="Create Party"
+            android:textColor="@color/text" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,8 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Authorising..."
-            android:textColor="#ffffff"
             android:textAlignment="center"
+            android:textColor="@color/text"
             android:textSize="24sp" />
 
     </LinearLayout>

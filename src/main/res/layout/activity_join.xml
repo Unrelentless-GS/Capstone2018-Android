@@ -21,39 +21,39 @@
             android:id="@+id/txtJoin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Party code"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="80dp"
             android:layout_marginRight="50dp"
             android:ems="10"
             android:gravity="center_horizontal"
+            android:hint="Party code"
             android:inputType="textPersonName"
-            android:textColor="#ffffff"
-            android:textColorHint="#888"/>
+            android:textColor="@color/text"
+            android:textColorHint="@color/textPlaceHolder" />
 
         <EditText
             android:id="@+id/txtNickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ems="10"
-            android:hint="Your nickname"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="50dp"
+            android:ems="10"
             android:gravity="center_horizontal"
+            android:hint="Your nickname"
             android:inputType="textPersonName"
-            android:textColor="#ffffff"
-            android:textColorHint="#888"/>
+            android:textColor="@color/text"
+            android:textColorHint="@color/textPlaceHolder" />
 
         <Button
             android:id="@+id/btnJoin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
             android:background="@layout/corner"
             android:text="Join Party"
-            android:textColor="#ffffff" />
+            android:textColor="@color/text" />
     </LinearLayout>
 </LinearLayout>

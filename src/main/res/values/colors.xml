@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimary">#363636</color>
     <color name="colorPrimaryDark">#1e1e1e</color>
     <color name="colorAccent">#ff9500</color>
+    <color name="colorDarkerAccent">#8a550a</color>
     <color name="searchBar">#2e2e29</color>
+    <color name="textArtist">#c8c8c8</color>
+    <color name="textPlaceHolder">#787878</color>
+    <color name="text">#ffffff</color>
+    <color name="activeUpArrow">#2ecc71</color>
+    <color name="activeDownArrow">#e74c3c</color>
 </resources>
