@@ -77,6 +77,15 @@ public class SongItem extends ArrayAdapter<Song> {
         });
         voteCount.setText(String.valueOf(song.voteCount));
 
+        if (song.yourVote > 0)
+        {
+            tvUpvote.setTextColor(Color.parseColor("#2ecc71"));
+        }
+        else if (song.yourVote < 0)
+        {
+            tvDownvote.setTextColor(Color.parseColor("#e74c3c"));
+        }
+
         return result;
     }
 

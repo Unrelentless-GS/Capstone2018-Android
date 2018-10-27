@@ -119,13 +119,12 @@
 
             <ImageView
                 android:id="@+id/btnTogglePlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="right|center"
-                android:layout_marginTop="2dp"
                 android:clickable="true"
-                android:padding="6dp"
-                app:srcCompat="@drawable/ic_play_button_orange" />
+                android:padding="2dp"
+                tools:srcCompat="@drawable/ic_play_button_orange" />
 
         </LinearLayout>
 

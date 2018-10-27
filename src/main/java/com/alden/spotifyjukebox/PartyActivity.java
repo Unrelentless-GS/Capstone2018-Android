@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -494,6 +495,7 @@ public class PartyActivity extends AppCompatActivity
     }
 
     private void DownloadPlaylist() {
+        final Activity _act = this;
         final Context ctx = this;
 
         UpdateRequest update = new UpdateRequest(ctx, userHash, "UpdatePlaylist");
@@ -501,7 +503,23 @@ public class PartyActivity extends AppCompatActivity
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    PopulateListView(response);
+                    if (TextUtils.isEmpty(response))
+                    {
+                        String string = "Party has been closed...";
+                        Snackbar.make(findViewById(R.id.drawer_layout), string, Snackbar.LENGTH_INDEFINITE).show();
+                        Timer redirectTimer = new Timer("RedirectTimer");
+                        redirectTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                _act.finish();
+                            }
+                        }, 3000);
+                    }
+                    else
+                    {
+                        PopulateListView(response);
+                    }
+
                 }
             },
 
@@ -586,8 +604,13 @@ public class PartyActivity extends AppCompatActivity
             if(!juke_msg.getBoolean("is_playing")) {
                 tvCurrentSong.setText("Nothing playing!");
                 tvCurrentAlbum.setText("");
+
+                int id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_play_button_orange", null, null);
+                btnTogglePlay.setImageResource(id);
                 return;
             }
+            int id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_pause_button_orange", null, null);
+            btnTogglePlay.setImageResource(id);
 
             JSONObject item = juke_msg.getJSONObject("item");
             Song s = new Song(item, true);
