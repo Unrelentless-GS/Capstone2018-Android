@@ -72,6 +72,10 @@ public class NetRequest {
         requests.add(sr);
     }
 
+    public void cleanUp(){
+        requests.stop();
+    }
+
     protected void MakeAuthorised(String userHash) {
         AddParameter("JukeboxCookie", userHash);
     }

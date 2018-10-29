@@ -128,11 +128,12 @@ public class PartyActivity extends AppCompatActivity
         btnTogglePlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TogglePlayRequest toggle = new TogglePlayRequest(_act, userHash);
+                final TogglePlayRequest toggle = new TogglePlayRequest(_act, userHash);
                 toggle.Perform(
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+                                toggle.cleanUp();
                                 ProcessToggleResponse(response);
                             }
                         },
@@ -140,6 +141,7 @@ public class PartyActivity extends AppCompatActivity
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                toggle.cleanUp();
                                 Log.d("Toggle", error.getMessage().toString());
                             }
                         });
@@ -204,17 +206,19 @@ public class PartyActivity extends AppCompatActivity
         isSearchOpen = true;
         searchLinearLayer.setVisibility(View.VISIBLE);
 
-        SearchRequest search = new SearchRequest(this, term, "track", userHash);
+        final SearchRequest search = new SearchRequest(this, term, "track", userHash);
         search.Perform(
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        search.cleanUp();
                         ProcessSearchResult(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        search.cleanUp();
                         Log.d("TEST_REQUEST", error.getMessage());
                     }
                 });
@@ -290,11 +294,12 @@ public class PartyActivity extends AppCompatActivity
             ChooseDeviceButtonHandler("");
         }
         else if (id == R.id.disband_party) {
-            UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "EndParty");
+            final UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "EndParty");
             updateReq.Perform(
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            updateReq.cleanUp();
                             _act.finish();
                         }
                     },
@@ -302,16 +307,18 @@ public class PartyActivity extends AppCompatActivity
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            updateReq.cleanUp();
                             Log.d("updateReq", error.getMessage().toString());
                         }
                     });
         }
         else if (id == R.id.leave_party) {
-            UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "LeaveParty");
+            final UpdateRequest updateReq = new UpdateRequest(PartyActivity.this, userHash, "LeaveParty");
             updateReq.Perform(
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            updateReq.cleanUp();
                             _act.finish();
                         }
                     },
@@ -319,6 +326,7 @@ public class PartyActivity extends AppCompatActivity
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            updateReq.cleanUp();
                             Log.d("updateReq", error.getMessage().toString());
                         }
                     });
@@ -330,11 +338,12 @@ public class PartyActivity extends AppCompatActivity
     }
 
     private void ChooseDeviceButtonHandler(final String cause){
-        ChooseDevicRequest chooseDev = new ChooseDevicRequest(PartyActivity.this, userHash, "GetDevices", "");
+        final ChooseDevicRequest chooseDev = new ChooseDevicRequest(PartyActivity.this, userHash, "GetDevices", "");
         chooseDev.Perform(
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        chooseDev.cleanUp();
                         ProcessChooseDeviceResponse(response, cause);
                     }
                 },
@@ -342,6 +351,7 @@ public class PartyActivity extends AppCompatActivity
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        chooseDev.cleanUp();
                         Log.d("chooseDev", error.getMessage().toString());
                     }
                 });
@@ -397,11 +407,12 @@ public class PartyActivity extends AppCompatActivity
 
                                 Activity _act = PartyActivity.this;
 
-                                ChooseDevicRequest chooseDev = new ChooseDevicRequest(_act, userHash, "PlayOnDevice", deviceID);
+                                final ChooseDevicRequest chooseDev = new ChooseDevicRequest(_act, userHash, "PlayOnDevice", deviceID);
                                 chooseDev.Perform(
                                         new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
+                                                chooseDev.cleanUp();
                                                 if (cause == "TP")
                                                 {
                                                     TogglePlayRequest toggle = new TogglePlayRequest(PartyActivity.this, userHash);
@@ -426,6 +437,7 @@ public class PartyActivity extends AppCompatActivity
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
+                                                chooseDev.cleanUp();
                                                 Log.d("chooseDev", error.getMessage().toString());
                                             }
                                         });
@@ -498,11 +510,12 @@ public class PartyActivity extends AppCompatActivity
         final Activity _act = this;
         final Context ctx = this;
 
-        UpdateRequest update = new UpdateRequest(ctx, userHash, "UpdatePlaylist");
+        final UpdateRequest update = new UpdateRequest(ctx, userHash, "UpdatePlaylist");
         update.Perform(
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    update.cleanUp();
                     if (TextUtils.isEmpty(response))
                     {
                         String string = "Party has been closed...";
@@ -526,7 +539,7 @@ public class PartyActivity extends AppCompatActivity
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    update.cleanUp();
                 }
             });
     }
@@ -534,11 +547,12 @@ public class PartyActivity extends AppCompatActivity
     private void DownloadPlayback() {
         final Context ctx = this;
 
-        UpdateRequest update = new UpdateRequest(ctx, userHash, "CurrentlyPlaying");
+        final UpdateRequest update = new UpdateRequest(ctx, userHash, "CurrentlyPlaying");
         update.Perform(
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        update.cleanUp();
                         ProcessPlayback(response);
                     }
                 },
@@ -546,7 +560,7 @@ public class PartyActivity extends AppCompatActivity
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        update.cleanUp();
                     }
                 });
     }
@@ -597,37 +611,43 @@ public class PartyActivity extends AppCompatActivity
     }
 
     private void ProcessPlayback(String response) {
+        int id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_pause_button_orange", null, null);
         try {
             JSONObject json = new JSONObject(response);
             JSONObject juke_msg = new JSONObject(json.getString("JUKE_MSG"));
 
-            if(!juke_msg.getBoolean("is_playing")) {
-                tvCurrentSong.setText("Nothing playing!");
-                tvCurrentAlbum.setText("");
-
-                int id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_play_button_orange", null, null);
-                btnTogglePlay.setImageResource(id);
-                return;
+            try{
+                Log.d("Debug","ERROR: " + juke_msg.getString("JukeboxFault"));
             }
-            int id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_pause_button_orange", null, null);
-            btnTogglePlay.setImageResource(id);
+            catch (Exception e){
 
-            JSONObject item = juke_msg.getJSONObject("item");
-            Song s = new Song(item, true);
+                if(!juke_msg.getBoolean("is_playing")) {
+                    tvCurrentSong.setText("Nothing playing!");
+                    tvCurrentAlbum.setText("");
 
-            if(!s.IsValid()) {
-                tvCurrentSong.setText("Updating ...");
-                tvCurrentAlbum.setText("");
-                return;
+                    id = getResources().getIdentifier("com.alden.spotifyjukebox:drawable/ic_play_button_orange", null, null);
+                    btnTogglePlay.setImageResource(id);
+                    return;
+                }
+
+                JSONObject item = juke_msg.getJSONObject("item");
+                Song s = new Song(item, true);
+
+                if(!s.IsValid()) {
+                    tvCurrentSong.setText("Updating ...");
+                    tvCurrentAlbum.setText("");
+                }
+                else
+                {
+                    tvCurrentSong.setText(s.name);
+                    tvCurrentAlbum.setText(s.artist + " • " + s.album);
+                    Picasso.get().load(s.imageLink).resize(50, 50).into(tvCurrentImage);
+                }
             }
-
-            tvCurrentSong.setText(s.name);
-            tvCurrentAlbum.setText(s.artist + " • " + s.album);
-            Picasso.get().load(s.imageLink).resize(50, 50).into(tvCurrentImage);
-
         }catch(JSONException je) {
             je.printStackTrace();
         }
+        btnTogglePlay.setImageResource(id);
     }
 
     private void ConfigureAuthorisation(Menu view) {

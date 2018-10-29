@@ -71,13 +71,14 @@ public class SongSearchItem extends ArrayAdapter<Song> {
 
         partyActivity.CloseSearch();
 
-        UpdateRequest add = new UpdateRequest(getContext(), userHash, "AddSong");
+        final UpdateRequest add = new UpdateRequest(getContext(), userHash, "AddSong");
         add.AddParameter("SongSpotifyID", s.spotifyID);
 
         add.Perform(
                 new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    add.cleanUp();
                     try{
                         JSONObject object = new JSONObject(response);
                         if(object.has("JUKE_MSG")) {
@@ -98,6 +99,7 @@ public class SongSearchItem extends ArrayAdapter<Song> {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    add.cleanUp();
                     Log.d("AddSong", error.getMessage().toString());
                 }
         });

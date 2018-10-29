@@ -114,6 +114,9 @@ public class HostActivity extends AppCompatActivity {
                 this.SetFormVisible(true);
                 this.SetLoadingVisible(false, "");
             }
+            else if (response.getType() == AuthenticationResponse.Type.ERROR) {
+                Log.d("HostActivity", "RESPONSE ERROR: " + response.getError());
+            }
         }
     }
 
@@ -137,6 +140,7 @@ public class HostActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                      @Override
                      public void onResponse(String response) {
+                         host.cleanUp();
                          if(response.equals("")) {
                              // TODO: Server returned blank.
                              return;
@@ -158,6 +162,7 @@ public class HostActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        host.cleanUp();
                         Log.d("TEST_REQUEST", error.getMessage().toString());
                     }
                 });

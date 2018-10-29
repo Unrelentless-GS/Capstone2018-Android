@@ -45,11 +45,12 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: Nickname validation.
-                JoinRequest join = new JoinRequest(_act, txtNickname.getText().toString(), txtPartyCode.getText().toString(), false);
+                final JoinRequest join = new JoinRequest(_act, txtNickname.getText().toString(), txtPartyCode.getText().toString(), false);
                 join.Perform(
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            join.cleanUp();
                             ProcessJoinResponse(response);
                         }
                     },
@@ -57,6 +58,7 @@ public class JoinActivity extends AppCompatActivity {
                      new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            join.cleanUp();
                             Log.d("Join", error.getMessage().toString());
                         }
                     });

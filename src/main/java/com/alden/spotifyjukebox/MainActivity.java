@@ -50,17 +50,19 @@ public class MainActivity extends AppCompatActivity {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateRequest update = new UpdateRequest(ctx, "9ed0d9da3a9b71a826a89d53174a40fb", "AddSong");
+                final UpdateRequest update = new UpdateRequest(ctx, "9ed0d9da3a9b71a826a89d53174a40fb", "AddSong");
                 update.AddParameter("SongSpotifyID", "0eGsygTp906u18L0Oimnem");
 
                 update.Perform(new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        update.cleanUp();
                         Log.d("TEST_UPDATE", response);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        update.cleanUp();
                         Log.d("TEST_UPDATE", error.getMessage());
                     }
                 });

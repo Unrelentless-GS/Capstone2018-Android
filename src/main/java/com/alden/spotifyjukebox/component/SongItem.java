@@ -106,11 +106,12 @@ public class SongItem extends ArrayAdapter<Song> {
     }
 
     private void SendVote(int songid, int value) {
-        VoteRequest vote = new VoteRequest(getContext(), userHash, songid, value);
+        final VoteRequest vote = new VoteRequest(getContext(), userHash, songid, value);
         vote.Perform(
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        vote.cleanUp();
                         try {
                             JSONObject json = new JSONObject(response);
                             JSONObject juke_msg = json.getJSONObject("JUKE_MSG");
@@ -128,6 +129,7 @@ public class SongItem extends ArrayAdapter<Song> {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        vote.cleanUp();
                         Log.d("SendVote", error.getMessage().toString());
                     }
                 }
